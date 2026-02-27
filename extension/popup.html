@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Synap Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{width:320px;background:#05080F;font-family:'DM Sans',sans-serif;color:#DDE5F0;}
+
+.header{padding:14px 16px 12px;background:#090D16;border-bottom:1px solid #131B27;display:flex;align-items:center;gap:10px;}
+.logo{width:28px;height:28px;border-radius:7px;}
+.h-title{font-family:'Syne';font-size:15px;font-weight:800;color:#fff;}
+.h-sub{font-size:9px;color:#3A4A60;margin-top:1px;}
+.live{margin-left:auto;display:flex;align-items:center;gap:4px;font-size:9px;color:#00D68F;font-weight:600;}
+.live::before{content:'';width:5px;height:5px;border-radius:50%;background:#00D68F;animation:p 1.5s infinite;}
+@keyframes p{0%,100%{opacity:1}50%{opacity:.3}}
+
+.sync-bar{padding:6px 16px;background:rgba(0,200,232,0.05);border-bottom:1px solid #0C1829;display:flex;align-items:center;gap:6px;font-size:10px;color:#3A6070;}
+.sync-dot{width:5px;height:5px;border-radius:50%;background:#00C8E8;animation:p 2s infinite;}
+
+.tools{padding:6px 8px 4px;}
+
+.trow{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:11px;cursor:pointer;transition:background .15s;margin-bottom:3px;}
+.trow:hover{background:#0C1019;}
+.trow:active{transform:scale(.98);}
+
+.temoji{font-size:18px;width:34px;height:34px;background:#0C1019;border-radius:9px;border:1px solid #131B27;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.tinfo{flex:1;min-width:0;}
+.tname{font-family:'Syne';font-size:12px;font-weight:700;color:#DDE5F0;margin-bottom:4px;display:flex;align-items:center;gap:5px;}
+.tbar{height:3px;border-radius:2px;background:#131B27;overflow:hidden;}
+.tfill{height:100%;border-radius:2px;transition:width .5s ease;}
+.tright{text-align:right;flex-shrink:0;}
+.trem{font-family:'Syne';font-size:14px;font-weight:800;line-height:1;}
+.tunit{font-size:8px;color:#3A4A60;margin-top:2px;}
+.treset{font-size:8px;color:#2A3848;margin-top:1px;}
+
+.badge{font-size:8px;font-weight:700;padding:1px 5px;border-radius:4px;letter-spacing:.3px;}
+.blow{background:rgba(245,166,35,.1);color:#F5A623;}
+.bempty{background:rgba(255,79,106,.1);color:#FF4F6A;}
+.bgood{background:rgba(0,214,143,.08);color:#00D68F;}
+
+.divider{height:1px;background:#0C1019;margin:4px 8px 6px;}
+
+.footer{padding:8px 12px 14px;display:flex;gap:7px;}
+.fbtn{flex:1;height:33px;border-radius:9px;border:1px solid #1A2336;background:#090D16;font-family:'DM Sans';font-size:11px;font-weight:600;color:#7A8FA8;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .2s;}
+.fbtn:hover{border-color:rgba(0,200,232,.3);color:#00C8E8;}
+.fbtn.p{background:rgba(0,200,232,.08);border-color:rgba(0,200,232,.2);color:#00C8E8;}
+
+.toast{position:fixed;bottom:6px;left:6px;right:6px;background:#0C1019;border:1px solid #1A2336;border-radius:9px;padding:9px 12px;font-size:11px;color:#DDE5F0;transform:translateY(50px);opacity:0;transition:all .3s cubic-bezier(.34,1.2,.64,1);z-index:99;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+.empty-state{padding:20px;text-align:center;font-size:11px;color:#3A4A60;line-height:1.6;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <svg class="logo" viewBox="0 0 512 512" fill="none">
+    <rect width="512" height="512" rx="112" fill="#0B1220"/>
+    <line x1="256" y1="118" x2="256" y2="216" stroke="#00D2F0" stroke-width="11" stroke-opacity=".35" stroke-linecap="round"/>
+    <line x1="369" y1="174" x2="293" y2="235" stroke="#00D2F0" stroke-width="11" stroke-opacity=".35" stroke-linecap="round"/>
+    <line x1="369" y1="338" x2="293" y2="277" stroke="#00D2F0" stroke-width="11" stroke-opacity=".35" stroke-linecap="round"/>
+    <line x1="256" y1="394" x2="256" y2="296" stroke="#00D2F0" stroke-width="11" stroke-opacity=".35" stroke-linecap="round"/>
+    <line x1="143" y1="338" x2="219" y2="277" stroke="#00D2F0" stroke-width="11" stroke-opacity=".35" stroke-linecap="round"/>
+    <line x1="143" y1="174" x2="219" y2="235" stroke="#00D2F0" stroke-width="11" stroke-opacity=".35" stroke-linecap="round"/>
+    <circle cx="256" cy="90"  r="26" fill="#00D2F0" fill-opacity=".9"/>
+    <circle cx="392" cy="166" r="26" fill="#00D2F0" fill-opacity=".75"/>
+    <circle cx="392" cy="346" r="26" fill="#00D2F0" fill-opacity=".75"/>
+    <circle cx="256" cy="422" r="26" fill="#00D2F0" fill-opacity=".9"/>
+    <circle cx="120" cy="346" r="26" fill="#00D2F0" fill-opacity=".75"/>
+    <circle cx="120" cy="166" r="26" fill="#00D2F0" fill-opacity=".75"/>
+    <circle cx="256" cy="256" r="40" fill="#00D2F0"/>
+    <circle cx="248" cy="248" r="14" fill="white" fill-opacity=".25"/>
+  </svg>
+  <div>
+    <div class="h-title">Synap Tracker</div>
+    <div class="h-sub">Auto-detecting usage</div>
+  </div>
+  <div class="live">LIVE</div>
+</div>
+
+<!-- Sync status -->
+<div class="sync-bar" id="syncBar">
+  <div class="sync-dot"></div>
+  <span id="syncText">Synced with Synap app</span>
+</div>
+
+<div class="tools" id="toolsWrap">
+  <div class="empty-state">Open ChatGPT, Claude or Gemini<br>— tracking starts automatically</div>
+</div>
+
+<div class="divider"></div>
+
+<div class="footer">
+  <button class="fbtn" id="btnReset">🔄 Reset All</button>
+  <button class="fbtn p" id="btnApp">📱 Open App</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const COLORS = { chatgpt_gpt4o:'#10A37F', claude:'#D97706', gemini:'#4285F4', perplexity:'#20B2AA' };
+
+function render(data) {
+  const wrap = document.getElementById('toolsWrap');
+  if (!data || !Object.values(data).some(t => t.lastUsed || t.used > 0)) {
+    wrap.innerHTML = '<div class="empty-state">Open ChatGPT, Claude or Gemini<br>— tracking starts automatically</div>';
+    return;
+  }
+  wrap.innerHTML = '';
+  Object.entries(data).forEach(([id, t]) => {
+    const col   = t.isEmpty ? '#FF4F6A' : t.isLow ? '#F5A623' : (COLORS[id]||'#00C8E8');
+    const badge = t.isEmpty ? 'bempty' : t.isLow ? 'blow' : 'bgood';
+    const blbl  = t.isEmpty ? 'LIMIT'  : t.isLow ? 'LOW'  : 'OK';
+    const row   = document.createElement('div');
+    row.className = 'trow';
+    row.title = 'Tap to reset';
+    row.innerHTML = `
+      <div class="temoji">${t.emoji}</div>
+      <div class="tinfo">
+        <div class="tname">${t.name} <span class="badge ${badge}">${blbl}</span></div>
+        <div class="tbar"><div class="tfill" style="width:${t.pct*100}%;background:${col}"></div></div>
+      </div>
+      <div class="tright">
+        <div class="trem" style="color:${col}">${t.remaining}</div>
+        <div class="tunit">${t.used}/${t.limit}</div>
+        <div class="treset">${t.resetIn||''}</div>
+      </div>`;
+    row.onclick = () => chrome.runtime.sendMessage({action:'reset',toolId:id}, () => { toast(`✅ ${t.name} reset!`); load(); });
+    wrap.appendChild(row);
+  });
+}
+
+function load() {
+  chrome.runtime.sendMessage({action:'getAll'}, d => {
+    render(d);
+    // Update sync time
+    const now = new Date();
+    document.getElementById('syncText').textContent =
+      `Synced ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+  });
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+document.getElementById('btnReset').onclick = () => {
+  chrome.runtime.sendMessage({action:'getAll'}, d => {
+    Object.keys(d).forEach(id => chrome.runtime.sendMessage({action:'reset',toolId:id}));
+    setTimeout(() => { load(); toast('🔄 All reset!'); }, 250);
+  });
+};
+
+// Open Synap app via deep link
+document.getElementById('btnApp').onclick = () => {
+  window.open('synap://tracker', '_blank');
+  toast('Opening Synap...');
+};
+
+load();
+setInterval(load, 3000); // refresh every 3s
+</script>
+</body>
+</html>
