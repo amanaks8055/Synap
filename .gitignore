@@ -11,6 +11,12 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
+.env*
+*.secret
+
+# Firebase/Google services (Security sensitive)
+**/google-services.json
+**/GoogleService-Info.plist
 
 # IntelliJ related
 *.iml
